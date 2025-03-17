@@ -1,15 +1,31 @@
+import { useState, useEffect } from "react";
 import ItemList from "./components/ItemList";
 
-// use the following link to get the data
-// `/doors` will give you all the doors.
-const API_URI = `https://${import.meta.env.VITE_API_URI}/doors`;
+const App = () => {
+  const [items, setItems] = useState([]);
 
-function App() {
-  // Get the existing item from the server
-  // const [items, setItems] = useState(null);
-  // pass the item to UpdateItem as a prop
+  useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        console.log("Fetching items...");
+        const response = await fetch("http://localhost:8000/doors");
+        const data = await response.json();
+        console.log("Fetched items:", data);
+        setItems(data);
+      } catch (error) {
+        console.error("Error fetching items:", error);
+      }
+    };
 
-  return <ItemList />;
-}
+    fetchItems();
+  }, []);
+
+  return (
+    <div>
+      <h1>Door Status</h1>
+      <ItemList items={items} />
+    </div>
+  );
+};
 
 export default App;
